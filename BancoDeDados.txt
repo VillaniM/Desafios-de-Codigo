@@ -1,4 +1,4 @@
-Cite as diferenças e dê exemplos práticos para cada um dos itens abaixo:
+Diferenças e exemplos práticos para cada os itens abaixo:
 
 - View
 - Table-valued Function
