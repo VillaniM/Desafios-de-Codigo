@@ -1,0 +1,115 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CadastroOrcamento</name>
+    </assembly>
+    <members>
+        <member name="T:OficinaAPI.Controllers.OrcamentosController">
+            <summary>
+            Controller para gerenciar orçamentos
+            </summary>
+        </member>
+        <member name="M:OficinaAPI.Controllers.OrcamentosController.CriarOrcamento(OficinaAPI.DTOs.CriarOrcamentoRequest)">
+            <summary>
+            Cria um novo orçamento
+            </summary>
+            <param name="request">Dados do orçamento</param>
+            <returns>Orçamento criado com sucesso</returns>
+            <response code="201">Orçamento criado com sucesso</response>
+            <response code="400">Dados inválidos</response>
+            <response code="500">Erro interno do servidor</response>
+        </member>
+        <member name="T:OficinaAPI.DTOs.CriarOrcamentoRequest">
+            <summary>
+            DTO para criar um novo orçamento
+            </summary>
+        </member>
+        <member name="T:OficinaAPI.DTOs.ItemOrcamentoRequest">
+            <summary>
+            DTO para um item do orçamento na requisição
+            </summary>
+        </member>
+        <member name="T:OficinaAPI.DTOs.OrcamentoResponse">
+            <summary>
+            DTO para resposta de sucesso ao criar orçamento
+            </summary>
+        </member>
+        <member name="T:OficinaAPI.DTOs.ItemOrcamentoResponse">
+            <summary>
+            DTO para um item na resposta
+            </summary>
+        </member>
+        <member name="T:OficinaAPI.DTOs.ErrorResponse">
+            <summary>
+            DTO para resposta de erro
+            </summary>
+        </member>
+        <member name="T:OficinaAPI.Models.Orcamento">
+            <summary>
+            Representa um orçamento de serviços da oficina
+            </summary>
+        </member>
+        <member name="T:OficinaAPI.Models.ItemOrcamento">
+            <summary>
+            Representa um item dentro do orçamento
+            </summary>
+        </member>
+        <member name="P:OficinaAPI.Models.ItemOrcamento.Subtotal">
+            <summary>
+            Subtotal do item (Quantidade * ValorUnitario)
+            </summary>
+        </member>
+        <member name="T:OficinaAPI.Models.OrcamentoStatus">
+            <summary>
+            Estados possíveis de um orçamento
+            </summary>
+        </member>
+        <member name="T:OficinaAPI.Services.IOrcamentoService">
+            <summary>
+            Serviço que contém a lógica de negócio para orçamentos
+            </summary>
+        </member>
+        <member name="T:OficinaAPI.Services.OrcamentoService">
+            <summary>
+            Implementação do serviço de orçamentos
+            </summary>
+        </member>
+        <member name="M:OficinaAPI.Services.OrcamentoService.CriarOrcamentoAsync(OficinaAPI.DTOs.CriarOrcamentoRequest)">
+            <summary>
+            Cria um novo orçamento após validações
+            </summary>
+        </member>
+        <member name="M:OficinaAPI.Services.OrcamentoService.CalcularTotal(OficinaAPI.Models.Orcamento)">
+            <summary>
+            Calcula o valor total do orçamento
+            </summary>
+        </member>
+        <member name="M:OficinaAPI.Services.OrcamentoService.MapearParaResponse(OficinaAPI.Models.Orcamento)">
+            <summary>
+            Mapeia um orçamento para o DTO de resposta
+            </summary>
+        </member>
+        <member name="T:OficinaAPI.Validators.OrcamentoValidator">
+            <summary>
+            Validador para dados de orçamento
+            </summary>
+        </member>
+        <member name="M:OficinaAPI.Validators.OrcamentoValidator.Validar(OficinaAPI.DTOs.CriarOrcamentoRequest)">
+            <summary>
+            Valida os dados da requisição de criar orçamento
+            </summary>
+            <param name="request">Dados do orçamento</param>
+            <returns>Lista de erros encontrados (vazia se válido)</returns>
+        </member>
+        <member name="M:OficinaAPI.Validators.OrcamentoValidator.ValidarItem(OficinaAPI.DTOs.ItemOrcamentoRequest,System.Int32)">
+            <summary>
+            Valida um item individual do orçamento
+            </summary>
+        </member>
+        <member name="T:Program">
+            <summary>
+            Auto-generated public partial Program class for top-level statement apps.
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,97 @@
+-- Criar dados de teste
+INSERT INTO Orcamento (Id, ClienteId, VeiculoId, Status, ValorTotal, DataCriacao)
+VALUES (1, 10, 20, 'Aberto', 0, GETDATE());
+
+INSERT INTO OrcamentoItem (OrcamentoId, Descricao, Quantidade, ValorUnitario, ValorTotal)
+VALUES 
+    (1, 'Troca de óleo', 1, 50.00, 50.00),
+    (1, 'Filtro de ar', 2, 30.00, 60.00);
+
+-- Finalizar
+DECLARE @Codigo INT;
+DECLARE @Mensagem VARCHAR(200);
+
+EXEC sp_FinalizarOrcamento
+    @OrcamentoId = 1,
+    @CodigoRetorno = @Codigo OUTPUT,
+    @MensagemRetorno = @Mensagem OUTPUT;
+
+SELECT @Codigo AS Codigo, @Mensagem AS Mensagem;
+
+-- Procedure
+CREATE PROCEDURE sp_FinalizarOrcamento
+    @OrcamentoId INT,
+    @CodigoRetorno INT OUTPUT,
+    @MensagemRetorno VARCHAR(200) OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    BEGIN TRY
+        -- ===== VALIDAÇÃO 1: Verificar se o orçamento existe =====
+        IF NOT EXISTS (SELECT 1 FROM Orcamento WHERE Id = @OrcamentoId)
+        BEGIN
+            SET @CodigoRetorno = 1;
+            SET @MensagemRetorno = 'Orçamento não encontrado.';
+            RETURN;
+        END
+        
+        -- ===== VALIDAÇÃO 2: Verificar se o status é "Aberto" =====
+        DECLARE @StatusAtual VARCHAR(50);
+        SELECT @StatusAtual = Status FROM Orcamento WHERE Id = @OrcamentoId;
+        
+        IF @StatusAtual != 'Aberto'
+        BEGIN
+            SET @CodigoRetorno = 2;
+            SET @MensagemRetorno = 'Orçamento não está aberto. Status atual: ' + @StatusAtual;
+            RETURN;
+        END
+        
+        -- ===== VALIDAÇÃO 3: Verificar se possui pelo menos 1 item =====
+        DECLARE @QtdItens INT;
+        SELECT @QtdItens = COUNT(*) FROM OrcamentoItem WHERE OrcamentoId = @OrcamentoId;
+        
+        IF @QtdItens = 0
+        BEGIN
+            SET @CodigoRetorno = 3;
+            SET @MensagemRetorno = 'Orçamento sem itens. Adicione pelo menos 1 item antes de finalizar.';
+            RETURN;
+        END
+        
+        -- ===== VALIDAÇÃO 4: Recalcular e atualizar valor total =====
+        DECLARE @ValorTotalCalculado DECIMAL(10,2);
+        
+        SELECT @ValorTotalCalculado = SUM(ValorTotal)
+        FROM OrcamentoItem
+        WHERE OrcamentoId = @OrcamentoId;
+        
+        -- Se algum item não tiver valor calculado, calcular
+        UPDATE OrcamentoItem
+        SET ValorTotal = (Quantidade * ValorUnitario)
+        WHERE OrcamentoId = @OrcamentoId
+        AND ValorTotal IS NULL OR ValorTotal = 0;
+        
+        -- Recalcular o total novamente após atualizar itens
+        SELECT @ValorTotalCalculado = SUM(Quantidade * ValorUnitario)
+        FROM OrcamentoItem
+        WHERE OrcamentoId = @OrcamentoId;
+        
+        -- ===== ATUALIZAR O ORÇAMENTO =====
+        UPDATE Orcamento
+        SET 
+            Status = 'Finalizado',
+            ValorTotal = @ValorTotalCalculado,
+            DataFinalizacao = GETDATE()
+        WHERE Id = @OrcamentoId;
+        
+        -- ===== RETORNAR SUCESSO =====
+        SET @CodigoRetorno = 0;
+        SET @MensagemRetorno = 'Orçamento finalizado com sucesso. Valor total: R$ ' + 
+                               FORMAT(@ValorTotalCalculado, 'N2', 'pt-BR');
+        
+    END TRY
+    BEGIN CATCH
+        SET @CodigoRetorno = 99;
+        SET @MensagemRetorno = 'Erro ao finalizar orçamento: ' + ERROR_MESSAGE();
+    END CATCH
+END;

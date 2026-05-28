@@ -1,0 +1,14 @@
+C:\Users\Marcela\Documents\Desafios de Codigo\gritado\bin\Debug\net10.0\gritado.exe
+C:\Users\Marcela\Documents\Desafios de Codigo\gritado\bin\Debug\net10.0\gritado.deps.json
+C:\Users\Marcela\Documents\Desafios de Codigo\gritado\bin\Debug\net10.0\gritado.runtimeconfig.json
+C:\Users\Marcela\Documents\Desafios de Codigo\gritado\bin\Debug\net10.0\gritado.dll
+C:\Users\Marcela\Documents\Desafios de Codigo\gritado\bin\Debug\net10.0\gritado.pdb
+C:\Users\Marcela\Documents\Desafios de Codigo\gritado\obj\Debug\net10.0\gritado.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Marcela\Documents\Desafios de Codigo\gritado\obj\Debug\net10.0\gritado.AssemblyInfoInputs.cache
+C:\Users\Marcela\Documents\Desafios de Codigo\gritado\obj\Debug\net10.0\gritado.AssemblyInfo.cs
+C:\Users\Marcela\Documents\Desafios de Codigo\gritado\obj\Debug\net10.0\gritado.csproj.CoreCompileInputs.cache
+C:\Users\Marcela\Documents\Desafios de Codigo\gritado\obj\Debug\net10.0\gritado.dll
+C:\Users\Marcela\Documents\Desafios de Codigo\gritado\obj\Debug\net10.0\refint\gritado.dll
+C:\Users\Marcela\Documents\Desafios de Codigo\gritado\obj\Debug\net10.0\gritado.pdb
+C:\Users\Marcela\Documents\Desafios de Codigo\gritado\obj\Debug\net10.0\gritado.genruntimeconfig.cache
+C:\Users\Marcela\Documents\Desafios de Codigo\gritado\obj\Debug\net10.0\ref\gritado.dll

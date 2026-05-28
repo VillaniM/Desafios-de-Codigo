@@ -1,0 +1,78 @@
+Cite as diferenças e dê exemplos práticos para cada um dos itens abaixo:
+
+- View
+- Table-valued Function
+- Stored Procedure
+- Trigger
+
+-View: Uma consulta salva que funciona como uma tabela virtual. Apenas para a visualização e consulta dos dados pré-selecionados. Ex - Ver apenas funcionários ativos: 
+CREATE VIEW vw_funcionarios_ativos AS
+SELECT id, nome, departamento, salario
+FROM funcionarios
+WHERE ativo = 1;
+
+-- Usando a view (como se fosse uma tabela)
+SELECT * FROM vw_funcionarios_ativos;
+
+
+
+- Table-valued Function: Uma função que recebe parâmetros e retorna a tabela selecionada com os parâmetros aplicados. EX - Funcionários de um departamento específico:
+CREATE FUNCTION fn_funcionarios_por_departamento(@dept VARCHAR(50))
+RETURNS TABLE
+AS
+RETURN
+    SELECT id, nome, salario
+    FROM funcionarios
+    WHERE departamento = @dept AND ativo = 1;
+
+-- Usando a função (passando parâmetro)
+SELECT * FROM fn_funcionarios_por_departamento('TI');
+SELECT * FROM fn_funcionarios_por_departamento('RH');
+
+
+
+- Stored Procedure: Uma rotina de instruções escrita em script de banco que pode executar múltiplas operações (INSERT, UPDATE, DELETE) e retornar resultados. EX - Demitir um funcionário:
+CREATE PROCEDURE sp_demitir_funcionario
+    @id INT,
+    @sucesso BIT OUTPUT
+AS
+BEGIN
+    IF EXISTS (SELECT 1 FROM funcionarios WHERE id = @id AND ativo = 1)
+    BEGIN
+        UPDATE funcionarios
+        SET ativo = 0
+        WHERE id = @id;
+        
+        SET @sucesso = 1;
+    END
+    ELSE
+    BEGIN
+        SET @sucesso = 0;
+    END
+END;
+
+-- Usando
+DECLARE @ok BIT;
+EXEC sp_demitir_funcionario @id = 5, @sucesso = @ok OUTPUT;
+SELECT CASE WHEN @ok = 1 THEN 'Demissão realizada' ELSE 'Funcionário não encontrado' END;
+
+
+
+- Trigger: Um conjunto de instruções que é executado automaticamente quando ocorre alteração nos dados da tabela(INSERT, UPDATE, DELETE). EX - Registrar quando um salário é alterado:
+CREATE TRIGGER trg_auditoria_salario
+ON funcionarios
+AFTER UPDATE
+AS
+BEGIN
+    INSERT INTO auditoria_salarios (nome_funcionario, salario_anterior, salario_novo, data_alteracao)
+    SELECT d.nome, d.salario, i.salario, GETDATE()
+    FROM deleted d
+    INNER JOIN inserted i ON d.id = i.id
+    WHERE d.salario != i.salario;
+END;
+
+-- Quando você atualiza um salário, é registrado automaticamente
+UPDATE funcionarios SET salario = 6000 WHERE id = 1;
+
+-- O histórico fica registrado
+SELECT * FROM auditoria_salarios;
